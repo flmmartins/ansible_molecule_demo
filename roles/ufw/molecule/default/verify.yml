@@ -1,0 +1,30 @@
+---
+# Execute Ansible tests.
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Check ufw is denying incoming connections
+    become: yes
+    shell: "ufw status verbose | grep \"deny (incoming)\""
+    register: ufw_check_result
+    tags: ['ufw', 'firewall', 'ufw_test', 'test']
+
+  - name: Assert ufw is denying incoming connections
+    assert:
+      that:
+      - not ufw_check_result.failed
+    tags: ['ufw', 'firewall', 'ufw_test', 'test']
+
+  - name: "Test telnet"
+    raw: "telnet 127.0.01 8080"
+    delegate_to: 127.0.0.1
+    ignore_errors: yes
+    register: telnetout
+    tags: ['ufw', 'firewall', 'ufw_test', 'test']
+
+  - name: Assert telnet connected
+    assert:
+      that:
+      - "'Connected to localhost.' in telnetout.stdout_lines"
+    tags: ['ufw', 'firewall', 'ufw_test', 'test']

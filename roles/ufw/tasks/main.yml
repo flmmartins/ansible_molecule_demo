@@ -1,0 +1,38 @@
+- name: ufw install
+  become: true
+  apt:
+    state: present 
+    update_cache: yes
+    name: ufw
+
+- name: UFW allow ssh port
+  become: true
+  ufw:
+    rule: allow
+    port: "80"
+    protocol: tcp
+  notify:
+  - reload ufw
+
+- name: ufw deny incoming
+  become: true
+  ufw:
+    direction: incoming
+    proto: any
+    policy: deny
+  notify:
+  - reload ufw
+
+- name: ufw allow outgoing
+  become: true
+  ufw:
+    direction: outgoing
+    proto: any
+    policy: allow
+  notify:
+  - reload ufw
+
+- name: ufw enable service
+  become: true
+  ufw:
+    state: enabled

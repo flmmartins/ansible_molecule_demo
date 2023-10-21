@@ -1,0 +1,9 @@
+# Run the provision aka role
+---
+- name: Converge
+  hosts: all
+  remote_user: ansible
+  tasks:
+    - name: "Include ufw"
+      ansible.builtin.include_role:
+        name: "ufw"

@@ -1,0 +1,22 @@
+# Setup test env
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: requirements.yml
+    requirements-file: requirements.yml
+driver:
+  name: docker
+lint: "yamllint"
+platforms:
+  - name: ubuntu2204-ansible
+    image: geerlingguy/docker-ubuntu2204-ansible
+    pre_build_image: true
+    capabilities:
+    - NET_ADMIN
+    published_ports:
+    - 127.0.0.1:8080:80
+provisioner:
+  name: ansible
+verifier:
+  name: ansible

@@ -1,0 +1,4 @@
+---
+collections:
+# SSH authorized keys
+- name: ansible.posix

@@ -1,0 +1,18 @@
+# The prepare playbook executes actions which bring the system to a given state prior to converge.
+# It is executed after create, and only once for the duration of the instances life.
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Add the user which will run ansible
+    ansible.builtin.user:
+      name: ansible
+      group: sudo
+
+  - name: Allow ansible user to have passwordless sudo
+    ansible.builtin.lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^ansible'
+      line: 'ansible ALL=(ALL) NOPASSWD: ALL'
+      validate: 'visudo -cf %s'
